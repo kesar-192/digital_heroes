@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #0a0f0d;
+  color: #f5f5f5;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* Deliberately avoiding golf clichés per PRD §12 — dark, motion-enhanced,
+   emerald accent standing in for "charitable impact" rather than fairway green. */
