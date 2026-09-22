@@ -8,8 +8,8 @@ type Verification = {
   status: "pending" | "approved" | "rejected";
   payout_status: "pending" | "paid";
   proofUrl: string | null;
-  profiles: { email: string; full_name: string | null }[];
-  draw_entries: { tier: string | null; prize_minor: number }[];
+  profiles: { email: string; full_name: string | null };
+  draw_entries: { tier: string | null; prize_minor: number };
 };
 
 export function VerificationRow({ verification: v }: { verification: Verification }) {
@@ -20,10 +20,10 @@ export function VerificationRow({ verification: v }: { verification: Verificatio
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-white">
-            {v.profiles?.[0]?.full_name ?? v.profiles?.[0]?.email} — {v.draw_entries?.[0]?.tier?.replace("match_", "")}
+            {v.profiles?.full_name ?? v.profiles?.email} — {v.draw_entries?.tier?.replace("match_", "")}
             -match
           </p>
-          <p className="text-xs text-white/50">£{((v.draw_entries?.[0]?.prize_minor ?? 0) / 100).toFixed(2)}</p>
+          <p className="text-xs text-white/50">£{((v.draw_entries?.prize_minor ?? 0) / 100).toFixed(2)}</p>
           {v.proofUrl && (
             <a
               href={v.proofUrl}

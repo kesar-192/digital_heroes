@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth/guards";
+import type { Database } from "@/types/database.types";
 
 const charitySchema = z.object({
   name: z.string().trim().min(2),
@@ -18,6 +19,20 @@ const charitySchema = z.object({
 });
 
 export type CharityActionState = { error?: string } | null;
+
+type CharityInsert = Database["public"]["Tables"]["charities"]["Insert"];
+type CharityUpdate = Database["public"]["Tables"]["charities"]["Update"];
+type CharityQuery = {
+  eq(column: string, value: string): Promise<{ error: { code?: string; message: string } | null }>;
+  neq(column: string, value: string): Promise<{ error: { code?: string; message: string } | null }>;
+};
+
+function charityTable(supabase: Awaited<ReturnType<typeof requireAdmin>>["supabase"]) {
+  return supabase.from("charities") as unknown as {
+    insert(values: CharityInsert): Promise<{ error: { code?: string; message: string } | null }>;
+    update(values: CharityUpdate): CharityQuery;
+  };
+}
 
 export async function createCharity(
   _prev: CharityActionState,
@@ -36,14 +51,15 @@ export async function createCharity(
   const { supabase } = await requireAdmin();
   const { name, slug, tagline, description, websiteUrl, isFeatured } = parsed.data;
 
-  const { error } = await supabase.from("charities").insert({
+  const charity: Database["public"]["Tables"]["charities"]["Insert"] = {
     name,
     slug,
     tagline: tagline ?? null,
     description: description ?? null,
     website_url: websiteUrl || null,
     is_featured: isFeatured ?? false,
-  });
+  };
+  const { error } = await charityTable(supabase).insert(charity);
 
   if (error) return { error: error.code === "23505" ? "That slug is already in use." : error.message };
 
@@ -54,7 +70,7 @@ export async function createCharity(
 
 export async function toggleCharityActive(charityId: string, isActive: boolean) {
   const { supabase } = await requireAdmin();
-  const { error } = await supabase.from("charities").update({ is_active: isActive }).eq("id", charityId);
+  const { error } = await charityTable(supabase).update({ is_active: isActive }).eq("id", charityId);
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/charities");
@@ -65,8 +81,8 @@ export async function setFeaturedCharity(charityId: string) {
   const { supabase } = await requireAdmin();
 
   // Only one spotlight charity at a time — clear the rest first.
-  await supabase.from("charities").update({ is_featured: false }).neq("id", charityId);
-  const { error } = await supabase.from("charities").update({ is_featured: true }).eq("id", charityId);
+  await charityTable(supabase).update({ is_featured: false }).neq("id", charityId);
+  const { error } = await charityTable(supabase).update({ is_featured: true }).eq("id", charityId);
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/charities");

@@ -36,7 +36,7 @@ export default async function AdminDrawsPage() {
                 <p>Winning numbers: {draw.winning_numbers?.join(", ")}</p>
                 <p className="mt-1 text-white/50">
                   Pool: £{(draw.pool_total_minor / 100).toFixed(2)} · Published{" "}
-                  {new Date(draw.published_at).toLocaleString()}
+                  {draw.published_at ? new Date(draw.published_at).toLocaleString() : "-"}
                 </p>
               </div>
             ) : (

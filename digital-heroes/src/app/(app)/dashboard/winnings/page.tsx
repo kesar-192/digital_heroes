@@ -23,14 +23,14 @@ export default async function WinningsPage() {
         {!winningEntries?.length && <li className="text-sm text-white/40">No wins yet — good luck next draw!</li>}
 
         {winningEntries?.map((entry) => {
-          const verification = entry.winner_verifications?.[0];
+          const verification = entry.winner_verifications;
           return (
             <li key={entry.id} className="rounded-xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium text-white">
                     {entry.tier?.replace("match_", "")}-number match ·{" "}
-                    {new Date(entry.draws?.[0]?.period as string).toLocaleDateString(undefined, {
+                    {new Date(entry.draws?.period as string).toLocaleDateString(undefined, {
                       month: "long",
                       year: "numeric",
                     })}

@@ -9,7 +9,7 @@ export default async function AdminWinnersPage() {
   const { data: verifications } = await supabase
     .from("winner_verifications")
     .select(
-      "id, status, payout_status, proof_path, created_at, profiles(email, full_name), draw_entries(tier, prize_minor)"
+      "id, status, payout_status, proof_path, created_at, profiles!winner_verifications_user_id_fkey(email, full_name), draw_entries(tier, prize_minor)"
     )
     .order("created_at", { ascending: false });
 

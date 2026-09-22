@@ -16,43 +16,43 @@ export type Database = {
     Tables: {
       charities: {
         Row: {
-          created_at: string
-          description: string | null
           id: string
-          image_path: string | null
-          is_active: boolean
-          is_featured: boolean
           name: string
           slug: string
           tagline: string | null
-          updated_at: string
+          description: string | null
+          image_path: string | null
           website_url: string | null
+          is_featured: boolean
+          is_active: boolean
+          created_at: string
+          updated_at: string
         }
         Insert: {
-          created_at?: string
-          description?: string | null
           id?: string
-          image_path?: string | null
-          is_active?: boolean
-          is_featured?: boolean
           name: string
           slug: string
           tagline?: string | null
-          updated_at?: string
+          description?: string | null
+          image_path?: string | null
           website_url?: string | null
+          is_featured?: boolean
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
         }
         Update: {
-          created_at?: string
-          description?: string | null
           id?: string
-          image_path?: string | null
-          is_active?: boolean
-          is_featured?: boolean
           name?: string
           slug?: string
           tagline?: string | null
-          updated_at?: string
+          description?: string | null
+          image_path?: string | null
           website_url?: string | null
+          is_featured?: boolean
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
         }
         Relationships: []
       }
